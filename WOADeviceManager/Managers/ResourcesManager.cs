@@ -15,21 +15,16 @@ namespace WOADeviceManager.Managers
     {
         public enum DownloadableComponent
         {
-            DRIVERS_EPSILON,
-            DRIVERS_ZETA,
-            FD_EPSILON,
-            FD_SECUREBOOT_DISABLED_EPSILON,
-            FD_SECUREBOOT_DISABLED_ZETA,
-            FD_ZETA,
+            DRIVERS_MH2LM,
+            FD_MH2LM,
+            FD_SECUREBOOT_DISABLED_MH2LM,
             PARTED,
-            TWRP_EPSILON,
-            TWRP_ZETA,
-            UEFI_EPSILON,
-            UEFI_SECUREBOOT_DISABLED_EPSILON,
-            UEFI_SECUREBOOT_DISABLED_ZETA,
-            UEFI_ZETA
+            TWRP_MH2LM,
+            UEFI_MH2LM,
+            UEFI_SECUREBOOT_DISABLED_MH2LM
         }
 
+        // None of these things are how it should still be
         public static async Task<StorageFile> RetrieveFile(DownloadableComponent component, bool redownload = false)
         {
             string downloadPath = string.Empty;
@@ -39,68 +34,38 @@ namespace WOADeviceManager.Managers
             switch (component)
             {
                 case DownloadableComponent.PARTED:
-                    downloadPath = "https://github.com/WOA-Project/SurfaceDuo-Guides/raw/main/Files/parted";
+                    downloadPath = "https://github.com/woa-lge/Port-Windows-11-Lge-devices/raw/main/Files/parted";
                     fileName = "parted";
                     break;
 
-                case DownloadableComponent.TWRP_EPSILON:
-                    downloadPath = "https://github.com/WOA-Project/SurfaceDuo-Guides/raw/main/Files/surfaceduo1-twrp.img";
-                    fileName = "surfaceduo1-twrp.img";
+                case DownloadableComponent.TWRP_MH2LM:
+                    downloadPath = "https://github.com/woa-lge/Port-Windows-11-Lge-devices/raw/main/Files/g8x-twrp.img";
+                    fileName = "g8x-twrp.img";
                     break;
-                case DownloadableComponent.UEFI_EPSILON:
+                case DownloadableComponent.UEFI_MH2LM:
                     releaseVersion = await HttpsUtils.GetLatestBSPReleaseVersion();
-                    downloadPath = $"https://github.com/WOA-Project/SurfaceDuo-Releases/releases/download/{releaseVersion}/Surface.Duo.1st.Gen.UEFI-v{releaseVersion}.Fast.Boot.zip";
-                    fileName = $"Surface.Duo.1st.Gen.UEFI-v{releaseVersion}.Fast.Boot.zip";
+                    downloadPath = $"https://github.com/woa-lge/G8x-Releases/releases/download/{releaseVersion}/lg-mh2lm.UEFI-v{releaseVersion}.Fast.Boot.zip";
+                    fileName = $"lg-mh2lm.UEFI-v{releaseVersion}.Fast.Boot.zip";
                     break;
-                case DownloadableComponent.UEFI_SECUREBOOT_DISABLED_EPSILON:
+                case DownloadableComponent.UEFI_SECUREBOOT_DISABLED_MH2LM:
                     releaseVersion = await HttpsUtils.GetLatestBSPReleaseVersion();
-                    downloadPath = $"https://github.com/WOA-Project/SurfaceDuo-Releases/releases/download/{releaseVersion}/Surface.Duo.1st.Gen.UEFI-v{releaseVersion}.Secure.Boot.Disabled.Fast.Boot.zip";
-                    fileName = $"Surface.Duo.1st.Gen.UEFI-v{releaseVersion}.Secure.Boot.Disabled.Fast.Boot.zip";
+                    downloadPath = $"https://github.com/woa-lge/G8x-Releases/releases/download/{releaseVersion}/lg-mh2lm.UEFI-v{releaseVersion}.Secure.Boot.Disabled.Fast.Boot.zip";
+                    fileName = $"lg-mh2lm.UEFI-v{releaseVersion}.Secure.Boot.Disabled.Fast.Boot.zip";
                     break;
-                case DownloadableComponent.FD_EPSILON:
+                case DownloadableComponent.FD_MH2LM:
                     releaseVersion = await HttpsUtils.GetLatestBSPReleaseVersion();
-                    downloadPath = $"https://github.com/WOA-Project/SurfaceDuo-Releases/releases/download/{releaseVersion}/Surface.Duo.1st.Gen.UEFI-v{releaseVersion}.FD.for.making.your.own.Dual.Boot.Image.zip";
-                    fileName = $"Surface.Duo.1st.Gen.UEFI-v{releaseVersion}.FD.for.making.your.own.Dual.Boot.Image.zip";
+                    downloadPath = $"https://github.com/woa-lge/G8x-Releases/releases/download/{releaseVersion}/lg-mh2lm.UEFI-v{releaseVersion}.FD.for.making.your.own.Dual.Boot.Image.zip";
+                    fileName = $"lg-mh2lm.UEFI-v{releaseVersion}.FD.for.making.your.own.Dual.Boot.Image.zip";
                     break;
-                case DownloadableComponent.FD_SECUREBOOT_DISABLED_EPSILON:
+                case DownloadableComponent.FD_SECUREBOOT_DISABLED_MH2LM:
                     releaseVersion = await HttpsUtils.GetLatestBSPReleaseVersion();
-                    downloadPath = $"https://github.com/WOA-Project/SurfaceDuo-Releases/releases/download/{releaseVersion}/Surface.Duo.1st.Gen.UEFI-v{releaseVersion}.Secure.Boot.Disabled.FD.for.making.your.own.Dual.Boot.Image.zip";
-                    fileName = $"Surface.Duo.1st.Gen.UEFI-v{releaseVersion}.Secure.Boot.Disabled.FD.for.making.your.own.Dual.Boot.Image.zip";
+                    downloadPath = $"https://github.com/woa-lge/G8x-Releases/releases/download/{releaseVersion}/lg-mh2lm.UEFI-v{releaseVersion}.Secure.Boot.Disabled.FD.for.making.your.own.Dual.Boot.Image.zip";
+                    fileName = $"lg-mh2lm.UEFI-v{releaseVersion}.Secure.Boot.Disabled.FD.for.making.your.own.Dual.Boot.Image.zip";
                     break;
-                case DownloadableComponent.DRIVERS_EPSILON:
+                case DownloadableComponent.DRIVERS_MH2LM:
                     releaseVersion = await HttpsUtils.GetLatestBSPReleaseVersion();
-                    downloadPath = $"https://github.com/WOA-Project/SurfaceDuo-Releases/releases/download/{releaseVersion}/SurfaceDuo-Drivers-v{releaseVersion}-Desktop-Epsilon.7z";
-                    fileName = $"SurfaceDuo-Drivers-v{releaseVersion}-Desktop-Epsilon.7z";
-                    break;
-
-                case DownloadableComponent.TWRP_ZETA:
-                    downloadPath = "https://github.com/WOA-Project/SurfaceDuo-Guides/raw/main/Files/surfaceduo2-twrp.img";
-                    fileName = "surfaceduo2-twrp.img";
-                    break;
-                case DownloadableComponent.UEFI_ZETA:
-                    releaseVersion = await HttpsUtils.GetLatestBSPReleaseVersion();
-                    downloadPath = $"https://github.com/WOA-Project/SurfaceDuo-Releases/releases/download/{releaseVersion}/Surface.Duo.2.UEFI-v{releaseVersion}.Fast.Boot.zip";
-                    fileName = $"Surface.Duo.2.UEFI-v{releaseVersion}.Fast.Boot.zip";
-                    break;
-                case DownloadableComponent.UEFI_SECUREBOOT_DISABLED_ZETA:
-                    releaseVersion = await HttpsUtils.GetLatestBSPReleaseVersion();
-                    downloadPath = $"https://github.com/WOA-Project/SurfaceDuo-Releases/releases/download/{releaseVersion}/Surface.Duo.2.UEFI-v{releaseVersion}.Secure.Boot.Disabled.Fast.Boot.zip";
-                    fileName = $"Surface.Duo.2.UEFI-v{releaseVersion}.Secure.Boot.Disabled.Fast.Boot.zip";
-                    break;
-                case DownloadableComponent.FD_ZETA:
-                    releaseVersion = await HttpsUtils.GetLatestBSPReleaseVersion();
-                    downloadPath = $"https://github.com/WOA-Project/SurfaceDuo-Releases/releases/download/{releaseVersion}/Surface.Duo.2.UEFI-v{releaseVersion}.FD.for.making.your.own.Dual.Boot.Image.zip";
-                    fileName = $"Surface.Duo.2.UEFI-v{releaseVersion}.FD.for.making.your.own.Dual.Boot.Image.zip";
-                    break;
-                case DownloadableComponent.FD_SECUREBOOT_DISABLED_ZETA:
-                    releaseVersion = await HttpsUtils.GetLatestBSPReleaseVersion();
-                    downloadPath = $"https://github.com/WOA-Project/SurfaceDuo-Releases/releases/download/{releaseVersion}/Surface.Duo.2.UEFI-v{releaseVersion}.Secure.Boot.Disabled.FD.for.making.your.own.Dual.Boot.Image.zip";
-                    fileName = $"Surface.Duo.2.UEFI-v{releaseVersion}.Secure.Boot.Disabled.FD.for.making.your.own.Dual.Boot.Image.zip";
-                    break;
-                case DownloadableComponent.DRIVERS_ZETA:
-                    releaseVersion = await HttpsUtils.GetLatestBSPReleaseVersion();
-                    downloadPath = $"https://github.com/WOA-Project/SurfaceDuo-Releases/releases/download/{releaseVersion}/SurfaceDuo-Drivers-v{releaseVersion}-Desktop-Zeta.7z";
-                    fileName = $"SurfaceDuo-Drivers-v{releaseVersion}-Desktop-Zeta.7z";
+                    downloadPath = $"https://github.com/woa-lge/G8x-Releases/releases/download/{releaseVersion}/Lg-Drivers-v{releaseVersion}-Desktop-Mh2lm.7z";
+                    fileName = $"Lg-Drivers-v{releaseVersion}-Desktop-Mh2lm.7z";
                     break;
             }
             return await RetrieveFile(downloadPath, fileName, redownload);

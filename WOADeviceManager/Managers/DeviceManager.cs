@@ -1,4 +1,4 @@
-﻿using AndroidDebugBridge;
+﻿﻿using AndroidDebugBridge;
 using FastBoot;
 using System;
 using System.Diagnostics;
@@ -13,23 +13,20 @@ namespace WOADeviceManager.Managers
 {
     public class DeviceManager
     {
-        private const string OEMEP_MassStorage_LinuxGadget_USBID = "USBSTOR#Disk&Ven_Linux&Prod_File-Stor_Gadget&Rev_0414#";
-        private const string OEMZE_MassStorage_LinuxGadget_USBID = "USBSTOR#Disk&Ven_Linux&Prod_File-Stor_Gadget&Rev_0504#";
+        private const string MH2LM_MassStorage_LinuxGadget_USBID = "USBSTOR#Disk&Ven_Linux&Prod_File-Stor_Gadget&Rev_0414#";
         private const string WINDOWS_USBID = "VID_045E&PID_0C2A&MI_00";
         private const string UFP_USBID = "USB#VID_045E&PID_066B#";
-        private const string FASTBOOT_USBID = "USB#VID_045E&PID_0C2F#";
-        private const string ANDROID_USBID = "USB#VID_045E&PID_0C29";
-        private const string OEMEP_TWRP_USBID = "USB#VID_05C6&PID_9039";
-        private const string OEMZE_TWRP_USBID = "USB#VID_18D1&PID_D001";
+        private const string FASTBOOT_USBID = "USB#VID_18D1&PID_D00D#";
+        private const string ANDROID_USBID = "USB#VID_2717&PID_FF40";
 
-        private const string OEMEP_PLATFORMID = "Microsoft Corporation.Surface.Surface Duo.1930";
-        private const string OEMZE_MMWAVE_PLATFORMID = "Microsoft Corporation.Surface.Surface Duo 2.1995";
-        private const string OEMZE_NR_PLATFORMID = "Microsoft Corporation.Surface.Surface Duo 2.1968";
+        private const string MH2LM_TWRP_USBID1 = "USB#VID_2717&PID_D001";
+        private const string MH2LM_TWRP_USBID2 = "USB#VID_18D1&PID_D001";
+
+        private const string MH2LM_PLATFORMID = "Lg.Surface.Lg G8x.mh2lm";
 
         private const string ADB_USB_INTERFACEGUID = "{dee824ef-729b-4a0e-9c14-b7117d33a817}";
 
-        private const string OEMEP_FRIENDLY_NAME = "Surface Duo";
-        private const string OEMZE_FRIENDLY_NAME = "Surface Duo 2";
+        private const string MH2LM_FRIENDLY_NAME = "Lg G8x";
 
         private readonly DeviceWatcher watcher;
 
@@ -207,16 +204,16 @@ namespace WOADeviceManager.Managers
             // %AdbCompositePTP%       = AdbCompositePTP_Install, USB\VID_045E&PID_0C2C&MI_01
             // %AdbCompositeMIDI%      = AdbCompositeMIDI_Install, USB\VID_045E&PID_0C2E&MI_02
             //
-            // Fastboot           = "Surface Duo Fastboot"
-            // Adb                = "Surface Duo ADB"
-            // AdbSideload        = "Surface Duo ADB Sideload"
-            // AdbComposite       = "Surface Duo Composite ADB"
-            // AdbCompositeTether = "Surface Duo Composite ADB Tether"
-            // AdbCompositeFT     = "Surface Duo Composite ADB File Transfer"
-            // AdbCompositePTP    = "Surface Duo Composite ADB PTP"
-            // AdbCompositeMIDI   = "Surface Duo Composite ADB MIDI"
+            // Fastboot           = "Lg G8x Fastboot"
+            // Adb                = "Lg G8x ADB"
+            // AdbSideload        = "Lg G8x ADB Sideload"
+            // AdbComposite       = "Lg G8x Composite ADB"
+            // AdbCompositeTether = "Lg G8x Composite ADB Tether"
+            // AdbCompositeFT     = "Lg G8x Composite ADB File Transfer"
+            // AdbCompositePTP    = "Lg G8x Composite ADB PTP"
+            // AdbCompositeMIDI   = "Lg G8x Composite ADB MIDI"
 
-            if (ID.Contains(OEMEP_MassStorage_LinuxGadget_USBID))
+            if (ID.Contains(MH2LM_MassStorage_LinuxGadget_USBID))
             {
                 if (Device.State != DeviceState.DISCONNECTED)
                 {
@@ -234,34 +231,8 @@ namespace WOADeviceManager.Managers
 
                 // No ID, to be filled later
                 Device.MassStorageID = ID;
-                Device.Product = DeviceProduct.Epsilon;
-                Device.Name = OEMEP_FRIENDLY_NAME;
-                Device.Variant = "N/A";
-                Device.MassStorage = new Helpers.MassStorage(ID);
-
-                NotifyDeviceArrival();
-                return;
-            }
-            else if (ID.Contains(OEMZE_MassStorage_LinuxGadget_USBID))
-            {
-                if (Device.State != DeviceState.DISCONNECTED)
-                {
-                    NotifyDeviceDeparture();
-                }
-
-                if (Device.State == DeviceState.TWRP_ADB_ENABLED)
-                {
-                    Device.State = DeviceState.TWRP_MASS_STORAGE_ADB_ENABLED;
-                }
-                else
-                {
-                    Device.State = DeviceState.OFFLINE_CHARGING;
-                }
-
-                // No ID, to be filled later
-                Device.MassStorageID = ID;
-                Device.Product = DeviceProduct.Zeta;
-                Device.Name = OEMZE_FRIENDLY_NAME;
+                Device.Product = DeviceProduct.Mh2lm;
+                Device.Name = MH2LM_FRIENDLY_NAME;
                 Device.Variant = "N/A";
                 Device.MassStorage = new Helpers.MassStorage(ID);
 
@@ -279,7 +250,7 @@ namespace WOADeviceManager.Managers
                 Device.ID = ID;
                 Device.Name = Name;
                 Device.Variant = "N/A";
-                Device.Product = Name.Contains("Duo 2") ? DeviceProduct.Zeta : DeviceProduct.Epsilon;
+                Device.Product = DeviceProduct.Mh2lm;
 
                 NotifyDeviceArrival();
             }
@@ -297,14 +268,12 @@ namespace WOADeviceManager.Managers
                         unifiedFlashingPlatformTransport = new(ID);
                     }
 
-                    // Microsoft Corporation.Surface.Surface Duo.1930
-                    // Microsoft Corporation.Surface.Surface Duo 2.1995
-                    // Microsoft Corporation.Surface.Surface Duo 2.1968
+                    // Lg.Surface.Lg G8x.mh2lm
                     string PlatformID = unifiedFlashingPlatformTransport.ReadDevicePlatformID();
 
                     switch (PlatformID)
                     {
-                        case OEMEP_PLATFORMID:
+                        case MH2LM_PLATFORMID:
                             {
                                 if (Device.State != DeviceState.DISCONNECTED)
                                 {
@@ -313,36 +282,9 @@ namespace WOADeviceManager.Managers
 
                                 Device.State = DeviceState.UFP;
                                 Device.ID = ID;
-                                Device.Name = OEMEP_FRIENDLY_NAME;
+                                Device.Name = MH2LM_FRIENDLY_NAME;
                                 Device.Variant = "N/A";
-                                Device.Product = DeviceProduct.Epsilon;
-
-                                if (Device.UnifiedFlashingPlatformTransport != null && Device.UnifiedFlashingPlatformTransport != unifiedFlashingPlatformTransport)
-                                {
-                                    Device.UnifiedFlashingPlatformTransport.Dispose();
-                                    Device.UnifiedFlashingPlatformTransport = unifiedFlashingPlatformTransport;
-                                }
-                                else if (Device.UnifiedFlashingPlatformTransport == null)
-                                {
-                                    Device.UnifiedFlashingPlatformTransport = unifiedFlashingPlatformTransport;
-                                }
-
-                                NotifyDeviceArrival();
-                                return;
-                            }
-                        case OEMZE_MMWAVE_PLATFORMID:
-                        case OEMZE_NR_PLATFORMID:
-                            {
-                                if (Device.State != DeviceState.DISCONNECTED)
-                                {
-                                    NotifyDeviceDeparture();
-                                }
-
-                                Device.State = DeviceState.UFP;
-                                Device.ID = ID;
-                                Device.Name = OEMZE_FRIENDLY_NAME;
-                                Device.Variant = "N/A";
-                                Device.Product = DeviceProduct.Zeta;
+                                Device.Product = DeviceProduct.Mh2lm;
 
                                 if (Device.UnifiedFlashingPlatformTransport != null && Device.UnifiedFlashingPlatformTransport != unifiedFlashingPlatformTransport)
                                 {
@@ -363,7 +305,7 @@ namespace WOADeviceManager.Managers
                 } catch { }
             }
             // Normal:
-            // Surface Duo Fastboot
+            // Lg G8x Fastboot
             else if (ID.Contains(FASTBOOT_USBID))
             {
                 try
@@ -408,8 +350,7 @@ namespace WOADeviceManager.Managers
 
                     switch (ProductName)
                     {
-                        case "surfaceduo":
-                        case "duo":
+                        case "mh2lm":
                             {
                                 if (Device.State != DeviceState.DISCONNECTED)
                                 {
@@ -426,44 +367,9 @@ namespace WOADeviceManager.Managers
                                 }
 
                                 Device.ID = ID;
-                                Device.Name = OEMEP_FRIENDLY_NAME;
+                                Device.Name = MH2LM_FRIENDLY_NAME;
                                 Device.Variant = DeviceVariant;
-                                Device.Product = DeviceProduct.Epsilon;
-
-                                if (Device.FastBootTransport != null && Device.FastBootTransport != fastBootTransport)
-                                {
-                                    Device.FastBootTransport.Dispose();
-                                    Device.FastBootTransport = fastBootTransport;
-                                }
-                                else if (Device.FastBootTransport == null)
-                                {
-                                    Device.FastBootTransport = fastBootTransport;
-                                }
-
-                                NotifyDeviceArrival();
-                                return;
-                            }
-                        case "surfaceduo2":
-                        case "duo2":
-                            {
-                                if (Device.State != DeviceState.DISCONNECTED)
-                                {
-                                    NotifyDeviceDeparture();
-                                }
-
-                                if (IsUserSpace == "yes")
-                                {
-                                    Device.State = DeviceState.FASTBOOTD;
-                                }
-                                else
-                                {
-                                    Device.State = DeviceState.BOOTLOADER;
-                                }
-
-                                Device.ID = ID;
-                                Device.Name = OEMZE_FRIENDLY_NAME;
-                                Device.Variant = DeviceVariant;
-                                Device.Product = DeviceProduct.Zeta;
+                                Device.Product = DeviceProduct.Mh2lm;
 
                                 if (Device.FastBootTransport != null && Device.FastBootTransport != fastBootTransport)
                                 {
@@ -485,26 +391,25 @@ namespace WOADeviceManager.Managers
                 catch { }
             }
             // Normal:
-            // Surface Duo ADB
-            // Surface Duo ADB Sideload
-            // Surface Duo Composite ADB
-            // Surface Duo Composite ADB Tether
-            // Surface Duo Composite ADB File Transfer
-            // Surface Duo Composite ADB PTP
-            // Surface Duo Composite ADB MIDI
+            // Lg G8x ADB
+            // Lg G8x ADB Sideload
+            // Lg G8x Composite ADB
+            // Lg G8x Composite ADB Tether
+            // Lg G8x Composite ADB File Transfer
+            // Lg G8x Composite ADB PTP
+            // Lg G8x Composite ADB MIDI
             //
             // Custom:
-            // Surface Duo TWRP
-            // Surface Duo 2 TWRP
-            else if ((ID.Contains("USB#VID_045E&PID_0C26#") ||
-             ID.Contains("USB#VID_045E&PID_0C30#") ||
-             ID.Contains("USB#VID_045E&PID_0C26&MI_01#") ||
-             ID.Contains("USB#VID_045E&PID_0C28&MI_02#") ||
-             ID.Contains("USB#VID_045E&PID_0C2A&MI_01#") ||
-             ID.Contains("USB#VID_045E&PID_0C2C&MI_01#") ||
-             ID.Contains("USB#VID_045E&PID_0C2E&MI_02#") ||
-             ID.Contains(OEMEP_TWRP_USBID) ||
-             ID.Contains(OEMZE_TWRP_USBID)) && ID.Contains(ADB_USB_INTERFACEGUID))
+            // Lg G8x TWRP
+            else if ((ID.Contains("USB#VID_18D1&PID_4EE7#") ||
+             ID.Contains("USB#VID_18D1&PID_4E11#") ||
+             ID.Contains("USB#VID_18D1&PID_FF48&MI_01#") ||
+             ID.Contains("USB#VID_2717&PID_FF88&MI_02#") ||
+             ID.Contains("USB#VID_2717&PID_FF48&MI_01#") ||
+             ID.Contains("USB#VID_2717&PID_FF18&MI_01#") ||
+             ID.Contains("USB#VID_18D1&PID_0C2E&MI_02#") ||
+             ID.Contains(MH2LM_TWRP_USBID1) ||
+             ID.Contains(MH2LM_TWRP_USBID2)) && ID.Contains(ADB_USB_INTERFACEGUID))
             {
                 Thread.Sleep(1000);
                 try
@@ -545,7 +450,7 @@ namespace WOADeviceManager.Managers
                 Device.ID = ID;
                 Device.Name = Name;
                 Device.Variant = "N/A";
-                Device.Product = Name.Contains("Duo 2") ? DeviceProduct.Zeta : DeviceProduct.Epsilon;
+                Device.Product = DeviceProduct.Mh2lm;
 
                 NotifyDeviceArrival();
             }
@@ -560,7 +465,7 @@ namespace WOADeviceManager.Managers
 
             string ID = androidDebugBridgeTransport.DevicePath;
 
-            if (ID.Contains(OEMEP_TWRP_USBID))
+            if (ID.Contains(MH2LM_TWRP_USBID1) || ID.Contains(MH2LM_TWRP_USBID2))
             {
                 if (Device.MassStorageID != null)
                 {
@@ -572,65 +477,26 @@ namespace WOADeviceManager.Managers
                 }
 
                 Device.ID = ID;
-                Device.Name = OEMEP_FRIENDLY_NAME;
+                Device.Name = MH2LM_FRIENDLY_NAME;
 
-                string DeviceVariant = Device.AndroidDebugBridgeTransport.GetVariableValue("ro.boot.product.hardware.sku");
+                string DeviceVariant = Device.AndroidDebugBridgeTransport.GetVariableValue("ro.boot.hwc");
                 switch (DeviceVariant)
                 {
-                    case "gen":
+                    case "INDIA":
                         {
-                            DeviceVariant = "GEN";
-                            break;
-                        }
-                    case "att":
-                        {
-                            DeviceVariant = "ATT";
-                            break;
-                        }
-                    case "eea":
-                        {
-                            DeviceVariant = "EEA";
+                            DeviceVariant = "bhima";
                             break;
                         }
                     default:
                         {
-                            DeviceVariant = "N/A";
+                            DeviceVariant = "mh2lm";
                             break;
                         }
                 }
 
                 Device.Variant = DeviceVariant;
 
-                Device.Product = DeviceProduct.Epsilon;
-
-                if (Device.AndroidDebugBridgeTransport != null && Device.AndroidDebugBridgeTransport != androidDebugBridgeTransport)
-                {
-                    Device.AndroidDebugBridgeTransport.Dispose();
-                    Device.AndroidDebugBridgeTransport = androidDebugBridgeTransport;
-                }
-                else if (Device.AndroidDebugBridgeTransport == null)
-                {
-                    Device.AndroidDebugBridgeTransport = androidDebugBridgeTransport;
-                }
-
-                NotifyDeviceArrival();
-                return;
-            }
-            else if (ID.Contains(OEMZE_TWRP_USBID))
-            {
-                if (Device.MassStorageID != null)
-                {
-                    Device.State = DeviceState.TWRP_MASS_STORAGE_ADB_ENABLED;
-                }
-                else
-                {
-                    Device.State = DeviceState.TWRP_ADB_ENABLED;
-                }
-
-                Device.ID = ID;
-                Device.Name = OEMZE_FRIENDLY_NAME;
-                Device.Variant = "N/A";
-                Device.Product = DeviceProduct.Zeta;
+                Device.Product = DeviceProduct.Mh2lm;
 
                 if (Device.AndroidDebugBridgeTransport != null && Device.AndroidDebugBridgeTransport != androidDebugBridgeTransport)
                 {
@@ -647,7 +513,7 @@ namespace WOADeviceManager.Managers
             }
             else
             {
-                string ProductDevice = "duo";
+                string ProductDevice = "mh2lm";
                 if (androidDebugBridgeTransport.GetPhoneConnectionVariables().ContainsKey("ro.product.device"))
                 {
                     ProductDevice = androidDebugBridgeTransport.GetPhoneConnectionVariables()["ro.product.device"];
@@ -655,7 +521,7 @@ namespace WOADeviceManager.Managers
 
                 switch (ProductDevice)
                 {
-                    case "duo":
+                    case "mh2lm":
                         {
                             if (androidDebugBridgeTransport.GetPhoneConnectionEnvironment() == "recovery")
                             {
@@ -674,7 +540,7 @@ namespace WOADeviceManager.Managers
                                 Device.State = DeviceState.ANDROID_ADB_ENABLED;
                             }
                             Device.ID = ID;
-                            Device.Name = OEMEP_FRIENDLY_NAME;
+                            Device.Name = MH2LM_FRIENDLY_NAME;
 
                             string ProductName = "N/A";
                             if (androidDebugBridgeTransport.GetPhoneConnectionVariables().ContainsKey("ro.product.name"))
@@ -684,19 +550,14 @@ namespace WOADeviceManager.Managers
 
                             switch (ProductName)
                             {
-                                case "duo":
+                                case "mh2lm_eea":
                                     {
-                                        Device.Variant = "GEN";
+                                        Device.Variant = "mh2lm_eea";
                                         break;
                                     }
-                                case "duo-att":
+                                case "mh2lm_global":
                                     {
-                                        Device.Variant = "ATT";
-                                        break;
-                                    }
-                                case "duo-eu":
-                                    {
-                                        Device.Variant = "EEA";
+                                        Device.Variant = "mh2lm_global";
                                         break;
                                     }
                                 default:
@@ -706,40 +567,7 @@ namespace WOADeviceManager.Managers
                                     }
                             }
 
-                            Device.Product = DeviceProduct.Epsilon;
-
-                            if (Device.AndroidDebugBridgeTransport != null && Device.AndroidDebugBridgeTransport != androidDebugBridgeTransport)
-                            {
-                                Device.AndroidDebugBridgeTransport.Dispose();
-                                Device.AndroidDebugBridgeTransport = androidDebugBridgeTransport;
-                            }
-                            else if (Device.AndroidDebugBridgeTransport == null)
-                            {
-                                Device.AndroidDebugBridgeTransport = androidDebugBridgeTransport;
-                            }
-
-                            NotifyDeviceArrival();
-                            return;
-                        }
-                    case "duo2":
-                        {
-                            if (androidDebugBridgeTransport.GetPhoneConnectionEnvironment() == "recovery")
-                            {
-                                Device.State = DeviceState.RECOVERY_ADB_ENABLED;
-                            }
-                            else if (androidDebugBridgeTransport.GetPhoneConnectionEnvironment() == "sideload")
-                            {
-                                Device.State = DeviceState.SIDELOAD_ADB_ENABLED;
-                            }
-                            else
-                            {
-                                Device.State = DeviceState.ANDROID_ADB_ENABLED;
-                            }
-
-                            Device.ID = ID;
-                            Device.Name = OEMZE_FRIENDLY_NAME;
-                            Device.Variant = "N/A";
-                            Device.Product = DeviceProduct.Zeta;
+                            Device.Product = DeviceProduct.Mh2lm;
 
                             if (Device.AndroidDebugBridgeTransport != null && Device.AndroidDebugBridgeTransport != androidDebugBridgeTransport)
                             {
@@ -767,7 +595,7 @@ namespace WOADeviceManager.Managers
 
             string ID = androidDebugBridgeTransport.DevicePath;
 
-            if (ID.Contains(OEMEP_TWRP_USBID))
+            if (ID.Contains(MH2LM_TWRP_USBID1) || ID.Contains(MH2LM_TWRP_USBID2))
             {
                 if (Device.State != DeviceState.DISCONNECTED)
                 {
@@ -784,43 +612,9 @@ namespace WOADeviceManager.Managers
                 }
 
                 Device.ID = ID;
-                Device.Name = OEMEP_FRIENDLY_NAME;
+                Device.Name = MH2LM_FRIENDLY_NAME;
                 Device.Variant = "N/A";
-                Device.Product = DeviceProduct.Epsilon;
-
-                if (Device.AndroidDebugBridgeTransport != null && Device.AndroidDebugBridgeTransport != androidDebugBridgeTransport)
-                {
-                    Device.AndroidDebugBridgeTransport.Dispose();
-                    Device.AndroidDebugBridgeTransport = androidDebugBridgeTransport;
-                }
-                else if (Device.AndroidDebugBridgeTransport == null)
-                {
-                    Device.AndroidDebugBridgeTransport = androidDebugBridgeTransport;
-                }
-
-                NotifyDeviceArrival();
-                return;
-            }
-            else if (ID.Contains(OEMZE_TWRP_USBID))
-            {
-                if (Device.State != DeviceState.DISCONNECTED)
-                {
-                    NotifyDeviceDeparture();
-                }
-
-                if (Device.MassStorageID != null)
-                {
-                    Device.State = DeviceState.TWRP_MASS_STORAGE_ADB_DISABLED;
-                }
-                else
-                {
-                    Device.State = DeviceState.TWRP_ADB_DISABLED;
-                }
-
-                Device.ID = ID;
-                Device.Name = OEMZE_FRIENDLY_NAME;
-                Device.Variant = "N/A";
-                Device.Product = DeviceProduct.Zeta;
+                Device.Product = DeviceProduct.Mh2lm;
 
                 if (Device.AndroidDebugBridgeTransport != null && Device.AndroidDebugBridgeTransport != androidDebugBridgeTransport)
                 {
@@ -837,11 +631,11 @@ namespace WOADeviceManager.Managers
             }
             else
             {
-                string ProductDevice = "duo";
+                string ProductDevice = "mh2lm";
 
                 switch (ProductDevice)
                 {
-                    case "duo":
+                    case "mh2lm":
                         {
                             if (Device.State != DeviceState.DISCONNECTED)
                             {
@@ -850,36 +644,9 @@ namespace WOADeviceManager.Managers
 
                             Device.State = DeviceState.ANDROID_ADB_DISABLED;
                             Device.ID = ID;
-                            Device.Name = OEMEP_FRIENDLY_NAME;
+                            Device.Name = MH2LM_FRIENDLY_NAME;
                             Device.Variant = "N/A";
-                            Device.Product = DeviceProduct.Epsilon;
-
-                            if (Device.AndroidDebugBridgeTransport != null && Device.AndroidDebugBridgeTransport != androidDebugBridgeTransport)
-                            {
-                                Device.AndroidDebugBridgeTransport.Dispose();
-                                Device.AndroidDebugBridgeTransport = androidDebugBridgeTransport;
-                            }
-                            else if (Device.AndroidDebugBridgeTransport == null)
-                            {
-                                Device.AndroidDebugBridgeTransport = androidDebugBridgeTransport;
-                            }
-
-                            NotifyDeviceArrival();
-                            return;
-                        }
-                    case "duo2":
-                        {
-                            if (Device.State != DeviceState.DISCONNECTED)
-                            {
-                                NotifyDeviceDeparture();
-                            }
-
-                            Device.State = DeviceState.ANDROID_ADB_DISABLED;
-
-                            Device.ID = ID;
-                            Device.Name = OEMZE_FRIENDLY_NAME;
-                            Device.Variant = "N/A";
-                            Device.Product = DeviceProduct.Zeta;
+                            Device.Product = DeviceProduct.Mh2lm;
 
                             if (Device.AndroidDebugBridgeTransport != null && Device.AndroidDebugBridgeTransport != androidDebugBridgeTransport)
                             {

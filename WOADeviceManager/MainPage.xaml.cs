@@ -95,7 +95,7 @@ namespace WOADeviceManager
                         _ = MainNavigationFrame.Navigate(typeof(AboutPage), null, e.RecommendedNavigationTransitionInfo);
                         break;
                     case "guides":
-                        await Launcher.LaunchUriAsync(new Uri("https://github.com/WOA-Project/SurfaceDuo-Guides/blob/main/README.md"));
+                        await Launcher.LaunchUriAsync(new Uri("https://github.com/woa-lge/Port-Windows-11-Lge-devices/blob/main/README.md"));
                         break;
                 }
             }
